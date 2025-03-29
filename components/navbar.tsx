@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { MicIcon, BookIcon, BarChart2Icon } from "lucide-react"
+import { AuthButton } from "@/components/auth-button"
 import { UserButton } from "@/components/user-button"
 
 export default function Navbar() {
@@ -44,6 +45,7 @@ export default function Navbar() {
               </Button>
             </Link>
           </div>
+          <AuthButton />
           <UserButton />
         </div>
       </div>
