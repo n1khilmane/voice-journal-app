@@ -1,0 +1,122 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String         @id @default(cuid())
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  journalEntries JournalEntry[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model Account {
+  id                 String  @id @default(cuid())
+  userId             String  @map("user_id")
+  type               String
+  provider           String
+  providerAccountId  String  @map("provider_account_id")
+  refresh_token      String?
+  access_token       String?
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?
+  session_state      String?
+  user               User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model JournalEntry {
+  id            Int       @id @default(autoincrement())
+  userId        String    @map("user_id")
+  title         String
+  transcription String
+  audioUrl      String?   @map("audio_url")
+  duration      String?
+  mood          String?
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @default(now()) @map("updated_at")
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  entryTags     EntryTag[]
+  insights      Insight[]
+  topics        Topic[]
+
+  @@map("journal_entries")
+}
+
+model Tag {
+  id        Int        @id @default(autoincrement())
+  name      String     @unique
+  entryTags EntryTag[]
+
+  @@map("tags")
+}
+
+model EntryTag {
+  entryId   Int          @map("entry_id")
+  tagId     Int          @map("tag_id")
+  entry     JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+  tag       Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([entryId, tagId])
+  @@map("entry_tags")
+}
+
+model Insight {
+  id          Int          @id @default(autoincrement())
+  entryId     Int          @map("entry_id")
+  title       String
+  description String
+  createdAt   DateTime     @default(now()) @map("created_at")
+  entry       JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@map("insights")
+}
+
+model Topic {
+  id          Int          @id @default(autoincrement())
+  entryId     Int          @map("entry_id")
+  name        String
+  percentage  Int
+  createdAt   DateTime     @default(now()) @map("created_at")
+  entry       JournalEntry @relation(fields: [entryId], references: [id], onDelete: Cascade)
+
+  @@map("topics")
+}
+
