@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import { MicIcon, BookIcon, BarChart2Icon } from "lucide-react"
 import { UserButton } from "@/components/user-button"
 
-export function Navbar() {
+export default function Navbar() {
   return (
     <header className="border-b">
       <div className="container flex h-16 items-center justify-between">
