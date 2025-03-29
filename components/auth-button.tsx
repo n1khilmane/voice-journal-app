@@ -1,26 +1,16 @@
-"use client"
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { signIn, signOut, useSession } from "next-auth/react"
-import { LogInIcon, LogOutIcon } from "lucide-react"
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { UserIcon } from 'lucide-react';
 
 export function AuthButton() {
-  const { data: session } = useSession()
-
-  if (session) {
-    return (
-      <Button variant="ghost" size="sm" onClick={() => signOut()} className="gap-2">
-        <LogOutIcon className="h-4 w-4" />
-        Sign Out
-      </Button>
-    )
-  }
-
   return (
-    <Button variant="ghost" size="sm" onClick={() => signIn("google")} className="gap-2">
-      <LogInIcon className="h-4 w-4" />
-      Sign In
-    </Button>
-  )
+    <Link href="/api/auth/signin">
+      <Button variant="outline" size="sm">
+        <UserIcon className="h-4 w-4 mr-2" />
+        Sign In
+      </Button>
+    </Link>
+  );
 }
-
