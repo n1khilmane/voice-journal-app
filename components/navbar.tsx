@@ -1,8 +1,6 @@
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { MicIcon, BookIcon, BarChart2Icon } from "lucide-react"
-import { AuthButton } from "@/components/auth-button"
-import { UserButton } from "@/components/user-button"
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { MicIcon, BookIcon, BarChart2Icon, UserIcon } from 'lucide-react';
 
 export default function Navbar() {
   return (
@@ -45,11 +43,14 @@ export default function Navbar() {
               </Button>
             </Link>
           </div>
-          <AuthButton />
-          <UserButton />
+          <Link href="/api/auth/signin">
+            <Button variant="outline" size="sm">
+              <UserIcon className="h-4 w-4 mr-2" />
+              Sign In
+            </Button>
+          </Link>
         </div>
       </div>
     </header>
-  )
+  );
 }
-
